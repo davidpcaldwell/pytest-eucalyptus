@@ -2,12 +2,6 @@
 Test step_from_factory
 """
 
-from __future__ import (absolute_import, division,
-                        print_function, unicode_literals)
-# pylint:disable=redefined-builtin, unused-wildcard-import, wildcard-import
-from builtins import *
-# pylint:enable=redefined-builtin, unused-wildcard-import, wildcard-import
-
 from datetime import date
 
 import factory
@@ -15,6 +9,7 @@ import factory
 from aloe import step, after
 from aloe.tools import guess_types
 from aloe.steps.factoryboy import step_from_factory
+
 
 class User(object):
     """A user"""

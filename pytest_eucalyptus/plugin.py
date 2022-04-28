@@ -3,14 +3,12 @@
 import os
 
 import pytest
-from aloe.testclass import TestCase, TestScenario
+from aloe.testclass import TestCase
 from aloe.registry import CALLBACK_REGISTRY
-from gherkin.parser import Parser
-from pytest import Collector, File, Item
+from pytest import File
 from _pytest.unittest import TestCaseFunction, UnitTestCase
 from _pytest.compat import getimfunc
 from importlib import import_module
-import sys
 
 
 def pytest_addoption(parser):
@@ -35,8 +33,6 @@ def pytest_addoption(parser):
         help="Only run scenarios with these indices (comma-separated)",
     )
 
-    # parser.addini('HELLO', 'Dummy pytest.ini setting')
-
 
 def pytest_collect_file(path, parent):
     """
@@ -44,7 +40,10 @@ def pytest_collect_file(path, parent):
     This collection hook looks for .feature files which contain cucumber tests.
     """
     if path.ext == ".feature":
-        return Feature(path, parent)
+        if hasattr(Feature, "from_parent"):
+            return Feature.from_parent(parent, fspath=path)
+        else:
+            return Feature(path, parent=parent)
 
 
 class Feature(File):
@@ -57,7 +56,10 @@ class Feature(File):
         test_case = test_class.from_file(self.fspath.strpath)
         self.obj = test_case
 
-        unit_test_case = FeatureUnitTestCase(test_case.feature.name, parent=self)
+        if hasattr(FeatureUnitTestCase, "from_parent"):
+            unit_test_case = FeatureUnitTestCase.from_parent(parent=self, name=test_case.feature.name)
+        else:
+            unit_test_case = FeatureUnitTestCase(name=test_case.feature.name, parent=self)
         unit_test_case.obj = test_case
         return [unit_test_case]
 
@@ -81,10 +83,13 @@ class FeatureUnitTestCase(UnitTestCase):
             if not getattr(x, "__test__", True):
                 continue
             funcobj = getimfunc(x)
-            function = TestCaseFunction(name, parent=self, callobj=funcobj)
+            if hasattr(TestCaseFunction, "from_parent"):
+                function = TestCaseFunction.from_parent(parent=self, name=name)
+                function.callobj = funcobj
+            else:
+                function = TestCaseFunction(name=name, parent=self, callobj=funcobj)
             self.obj.functions.append(function)
             yield function
-            foundsomething = True
 
 
 @pytest.fixture(autouse=True, scope="session")

@@ -10,3 +10,5 @@ tmp_file_*
 /tests/integration/calculator-actual.txt
 .tox
 .coverage
+.idea
+coverage.xml

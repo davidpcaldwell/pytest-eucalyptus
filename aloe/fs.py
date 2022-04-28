@@ -2,18 +2,7 @@
 """
 Filesystem-related utilities.
 """
-
-from __future__ import unicode_literals
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
 import os
-import fnmatch
-
-from future.utils import raise_from
-
-from aloe.exceptions import StepDiscoveryError
 
 
 def path_to_module_name(filename):

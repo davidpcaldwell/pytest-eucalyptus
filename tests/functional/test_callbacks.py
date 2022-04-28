@@ -2,14 +2,8 @@
 Test callbacks.
 """
 
-from __future__ import unicode_literals
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
 import operator
-from functools import reduce  # pylint:disable=redefined-builtin
-import pytest
+from functools import reduce
 
 
 from aloe import world
@@ -220,41 +214,3 @@ class CallbackTest(FeatureTest):
 
         assert world.passing_steps ==  2
         assert world.failed_steps ==  1
-
-
-@in_directory('tests/multiple_steps_app')
-@pytest.mark.skip(reason="multiple directories not supported")
-class MultipleDirectoriesCallbackTest(FeatureTest):
-    """
-    Test before.all callbacks when running features from multiple directories.
-    """
-
-    def test_single_app(self):
-        """
-        Test all the callbacks are called when running a single feature.
-        """
-
-        self.assert_feature_success('one/features/check_started.feature')
-
-        self.assertEqual(world.started_callbacks_one, {
-            'one': True,
-            'two': True,
-        })
-
-    def test_multiple_apps(self):
-        """
-        Test what is loaded and called when running features from multiple
-        directories.
-        """
-
-        self.assert_feature_success()
-
-        self.assertEqual(world.started_callbacks_one, {
-            'one': True,
-            'two': True,
-        })
-
-        self.assertEqual(world.started_callbacks_two, {
-            'one': True,
-            'two': True,
-        })

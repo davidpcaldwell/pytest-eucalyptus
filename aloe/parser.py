@@ -3,16 +3,6 @@
 A Gherkin parser written using pyparsing.
 """
 
-from __future__ import unicode_literals
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# pylint:disable=redefined-builtin,wildcard-import,unused-wildcard-import
-from builtins import *
-
-# pylint:enable=redefined-builtin,wildcard-import,unused-wildcard-import
-
 import os
 from collections import OrderedDict
 from copy import copy
@@ -655,7 +645,7 @@ class Feature(HeaderNode, TaggedNode):
         try:
             return cls(parser.parse(string or filename, token_matcher=token_matcher), filename=filename)
         except ParserError as ex:
-            raise AloeSyntaxError(filename, str(ex))
+            raise AloeSyntaxError(filename, str(ex)) from ex
 
     @classmethod
     def from_string(cls, string, language=None):

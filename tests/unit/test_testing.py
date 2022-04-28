@@ -1,12 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Test step loading.
-"""
-
-from __future__ import unicode_literals
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
+"""Test step loading."""
 
 import os
 import unittest
@@ -19,14 +12,10 @@ from tests.testing import (
 
 @in_directory('tests/unit')
 class FeatureTestTest(FeatureTest):
-    """
-    Test running features.
-    """
+    """Test running features."""
 
     def test_run_good_feature_string(self):
-        """
-        Test running strings as features.
-        """
+        """Test running strings as features."""
 
         result = self.run_feature_string(
             """
@@ -41,9 +30,7 @@ class FeatureTestTest(FeatureTest):
         assert result.success, result.captured_stream.getvalue()
 
     def test_run_feature_string_fail(self):
-        """
-        Test running a failing feature string.
-        """
+        """Test running a failing feature string."""
 
         result = self.run_feature_string(
             """
@@ -58,9 +45,7 @@ class FeatureTestTest(FeatureTest):
         assert not result.success, result.captured_stream.getvalue()
 
     def test_run_feature_string_parse_error(self):
-        """
-        Test running a misformatted feature string.
-        """
+        """Test running a misformatted feature string."""
 
         result = self.run_feature_string(
             """
@@ -71,9 +56,7 @@ class FeatureTestTest(FeatureTest):
         assert not result.success, result.captured_stream.getvalue()
 
     def test_run_good_feature_string_non_ascii(self):
-        """
-        Test running strings with non-ASCII symbols as features.
-        """
+        """Test running strings with non-ASCII symbols as features."""
 
         result = self.run_feature_string(
             """
@@ -90,8 +73,6 @@ class FeatureTestTest(FeatureTest):
 
 
 def relative(directory):
-    """
-    A directory relative to the one containing this file.
-    """
+    """A directory relative to the one containing this file."""
 
     return os.path.join(os.path.dirname(__file__), directory)

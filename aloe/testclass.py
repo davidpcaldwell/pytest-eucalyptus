@@ -2,19 +2,6 @@
 Base test class for tests generated from scenarios.
 """
 
-from __future__ import unicode_literals
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# pylint:disable=redefined-builtin
-from builtins import zip
-from builtins import str
-from builtins import range
-from builtins import super
-
-# pylint:enable=redefined-builtin
-
 import ast
 import unittest
 import pytest
@@ -24,7 +11,7 @@ from .codegen import make_function
 from .fs import path_to_module_name
 from .parser import Background, Feature, Scenario, Step
 from .registry import CallbackDecorator, CALLBACK_REGISTRY, PriorityClass, STEP_REGISTRY
-from .utils import identifier, get_args
+from .utils import get_args
 
 
 class TestStep(Step):
@@ -172,7 +159,7 @@ class TestCase(unittest.TestCase):
 
         members.update({scenario.__name__: scenario for scenario in scenarios})
 
-        class_name = identifier(feature.name)
+        class_name = feature.name
 
         testclass = type(class_name, (cls,), members)
         testclass.feature.testclass = testclass

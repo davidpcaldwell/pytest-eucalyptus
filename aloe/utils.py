@@ -2,25 +2,12 @@
 Miscellaneous utilities used internally by Aloe.
 """
 
-from __future__ import print_function
-from __future__ import unicode_literals
-from __future__ import division
-from __future__ import absolute_import
-
-# pylint:disable=redefined-builtin, unused-wildcard-import, wildcard-import
-from builtins import *
-
-# pylint:enable=redefined-builtin, unused-wildcard-import, wildcard-import
-
 import io
 import re
 import sys
 import inspect
 
-try:
-    from functools import lru_cache
-except ImportError:
-    from repoze.lru import lru_cache
+from functools import lru_cache
 from contextlib import contextmanager
 
 
@@ -109,7 +96,6 @@ class memoizedproperty(object):  # pylint:disable=invalid-name
         self.func = func
         self.name = func.__name__
         self.__doc__ = func.__doc__
-        self.__func__ = func  # Compatibility with python-future's newsuper
 
     def __get__(self, instance, owner):
         """Compute the value and cache it in the class dict."""

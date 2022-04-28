@@ -1,3 +1,3 @@
-import pytest;
+import pytest
 
 pytest_plugins = 'pytester'

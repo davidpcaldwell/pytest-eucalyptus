@@ -2,14 +2,6 @@
 Utilities for testing libraries using Aloe.
 """
 
-from __future__ import unicode_literals
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-# pylint:disable=redefined-builtin
-from builtins import super
-# pylint:enable=redefined-builtin
-
 import io
 import os
 import sys
@@ -22,7 +14,6 @@ import glob
 import shutil
 
 from aloe import world
-from aloe.fs import path_to_module_name
 from aloe.registry import (
     CALLBACK_REGISTRY,
     PriorityClass,
@@ -38,10 +29,12 @@ else:
     # io.StringIO is an alias to cStringIO.StringIO, which is a function and
     # not a type
     import StringIO  # pylint:disable=import-error
+
     CAPTURED_OUTPUTS = (
         type(io.StringIO()),
         StringIO.StringIO,
     )
+
 
 def in_directory(directory):
     """
@@ -55,7 +48,7 @@ def in_directory(directory):
     Applies to either a function or an instance of
     TestCase, in which case setUp/tearDown are used.
     """
-    
+
     def wrapper(func_or_class):
         """
         Wrap a function or a test case class to execute in a different
@@ -68,7 +61,7 @@ def in_directory(directory):
             is_test_case = False
 
         if is_test_case:
-            
+
             func_or_class.test_dir = os.path.abspath(directory)
 
             return func_or_class
@@ -80,7 +73,7 @@ def in_directory(directory):
                 """
                 Execute the function in a different directory.
                 """
-                
+
                 return func_or_class(*args, **kwargs)
 
             return wrapped
@@ -105,6 +98,7 @@ def named_temporary_file(*args, **kwargs):
             except OSError:
                 pass
 
+
 class FeatureTest(unittest.TestCase):
     """
     Base class for tests running Gherkin features.
@@ -119,23 +113,22 @@ class FeatureTest(unittest.TestCase):
 
     @pytest.fixture(autouse=True)
     def inittestdir(self, testdir):
-        self.testdir = testdir        
+        self.testdir = testdir
 
-        features_dir = os.path.join(self.test_dir, "features") 
-        
-        steps_file = os.path.join(features_dir, "steps.py") 
-        if (os.path.isfile(steps_file)):
+        features_dir = os.path.join(self.test_dir, "features")
+
+        steps_file = os.path.join(features_dir, "steps.py")
+        if os.path.isfile(steps_file):
             with open(steps_file, 'r') as file:
-                testdir.makeconftest(file.read())  
+                testdir.makeconftest(file.read())
 
         files = glob.iglob(os.path.join(features_dir, "*.feature"))
-        dest_dir = testdir.mkdir("features");
+        dest_dir = testdir.mkdir("features")
         for file in files:
-            if os.path.isfile(file):                
-                shutil.copy(file, dest_dir)      
-        
+            if os.path.isfile(file):
+                shutil.copy(file, dest_dir)
 
-    def run_feature_string(self, feature_string, pytest_args = None):
+    def run_feature_string(self, feature_string, pytest_args=None):
         """
         Run the specified string as a feature.
 
@@ -143,14 +136,11 @@ class FeatureTest(unittest.TestCase):
         directory relative to the current directory. This ensures the steps
         contained within would be found by the loader.
         """
-        
-        self.testdir.makefile(".feature", feature_string)  
+
+        self.testdir.makefile(".feature", feature_string)
 
         filename = self._testMethodName + ".feature"
-        return self.run_features(filename);
-        # self.testdir.inline_run(filename, plugins=["pytest_eucalyptus"])
-        # return TestResult(result)
-
+        return self.run_features(filename)
 
     def run_features(self, *args, **kwargs):
         """
@@ -159,11 +149,9 @@ class FeatureTest(unittest.TestCase):
 
         # named keyword args and variable positional args aren't supported on
         # Python 2
-        verbosity = kwargs.get('verbosity')
         stream = kwargs.get('stream')
-        force_color = kwargs.get('force_color', False)
 
-        if stream is None:       
+        if stream is None:
             # redirects output
             stream = StreamTestWrapperIO()
 
@@ -172,14 +160,13 @@ class FeatureTest(unittest.TestCase):
         CALLBACK_REGISTRY.clear(priority_class=PriorityClass.USER)
         STEP_REGISTRY.clear()
         world.__dict__.clear()
-        
-        old_stdout = sys.stdout        
+
+        old_stdout = sys.stdout
         sys.stdout = stream
-        
+
         result = self.testdir.inline_run(*args, plugins=["pytest_eucalyptus"])
-        sys.stdout = old_stdout        
-        return TestResult(result, stream);
-        
+        sys.stdout = old_stdout
+        return TestResult(result, stream)
 
     def assert_feature_success(self, *features, **kwargs):
         """
@@ -195,8 +182,8 @@ class FeatureTest(unittest.TestCase):
                 print("--Output--")
                 print(result.captured_stream.getvalue())
                 print("--END--")
-            raise    
-            pass        
+            raise
+            pass
 
     def assert_feature_fail(self, *features, **kwargs):
         """
@@ -218,6 +205,6 @@ class FeatureTest(unittest.TestCase):
 
 class TestResult(object):
     def __init__(self, result, stream):
-        realpassed, realskipped, realfailed = result.listoutcomes();
+        realpassed, realskipped, realfailed = result.listoutcomes()
         self.success = len(realskipped) == 0 and len(realfailed) == 0
-        self.captured_stream = stream        
+        self.captured_stream = stream

@@ -2,17 +2,6 @@
 """
 Test Gherkin parser.
 """
-
-from __future__ import unicode_literals
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# pylint:disable=redefined-builtin
-from builtins import zip
-
-# pylint:enable=redefined-builtin
-
 from aloe.parser import Feature, Scenario, Background
 from aloe.exceptions import AloeSyntaxError
 from tests.testing import named_temporary_file
@@ -452,17 +441,13 @@ Feature: three tags in the first scenario
 
 
 def test_feature_has_repr():
-    """
-    Feature implements __repr__ nicely
-    """
+    """Feature implements __repr__ nicely"""
     feature = Feature.from_string(FEATURE1)
     assert repr(feature) == '<Feature: "Rent movies">'
 
 
 def test_scenario_has_name():
-    """
-    It should extract the name string from the scenario
-    """
+    """It should extract the name string from the scenario"""
 
     feature = Feature.from_string(FEATURE1)
 
@@ -472,9 +457,7 @@ def test_scenario_has_name():
 
 
 def test_feature_has_scenarios():
-    """
-    A feature object should have a list of scenarios
-    """
+    """A feature object should have a list of scenarios"""
 
     feature = Feature.from_string(FEATURE1)
 
@@ -524,14 +507,11 @@ def test_outline_steps():
     # Steps that are not a part of an outline don't have the outline reference
     for outline, steps in feature.scenarios[0].evaluated:
         for step in steps:
-            assert step, outline == None
+            assert step, outline is None
 
 
 def test_can_parse_feature_description():
-    """
-    A feature object should have a description
-    """
-
+    """A feature object should have a description"""
     feature = Feature.from_string(FEATURE2)
 
     assert feature.description == (
@@ -553,7 +533,7 @@ def test_can_parse_feature_description():
 
 
 def test_scenarios_parsed_by_feature_has_feature():
-    "Scenarios parsed by features has feature"
+    """Scenarios parsed by features has feature"""
 
     feature = Feature.from_string(FEATURE2)
 
@@ -562,10 +542,7 @@ def test_scenarios_parsed_by_feature_has_feature():
 
 
 def test_feature_max_length_on_scenario():
-    """
-    The max length of a feature considering when the scenario is longer than
-    the remaining things
-    """
+    """The max length of a feature considering when the scenario is longer than the remaining things"""
 
     feature = Feature.from_string(FEATURE1)
     assert feature.max_length == 76
@@ -634,7 +611,7 @@ def test_feature_max_length_on_scenario_outline():
 def test_feature_max_length_on_scenario_outline_keys():
     """
     The max length of a feature considering when the table keys of the
-    scenario oulines are longer than the remaining things
+    scenario outlines are longer than the remaining things
     """
 
     feature1 = Feature.from_string(FEATURE8)
@@ -644,7 +621,7 @@ def test_feature_max_length_on_scenario_outline_keys():
 
 
 def test_description_on_long_named_feature():
-    "Can parse the description on long named features"
+    """Can parse the description on long named features"""
     feature = Feature.from_string(FEATURE3)
     assert feature.description == (
         "In order to describe my features\n" "I want to add description on them"
@@ -652,7 +629,7 @@ def test_description_on_long_named_feature():
 
 
 def test_description_on_big_sentenced_steps():
-    "Can parse the description on long sentenced steps"
+    """Can parse the description on long sentenced steps"""
     feature = Feature.from_string(FEATURE4)
     assert feature.description == (
         "As a clever guy\n"
@@ -662,9 +639,7 @@ def test_description_on_big_sentenced_steps():
 
 
 def test_comments():
-    """
-    It should ignore lines that start with #, despite white spaces
-    """
+    """It should ignore lines that start with #, despite white spaces"""
 
     feature = Feature.from_string(FEATURE10)
 
@@ -672,7 +647,7 @@ def test_comments():
 
 
 def test_single_scenario_single_scenario():
-    "Features should have at least the first scenario parsed with tags"
+    """Features should have at least the first scenario parsed with tags"""
     feature = Feature.from_string(FEATURE11)
 
     first_scenario = feature.scenarios[0]
@@ -681,7 +656,7 @@ def test_single_scenario_single_scenario():
 
 
 def test_single_feature_single_tag():
-    "All scenarios within a feature inherit the feature's tags"
+    """All scenarios within a feature inherit the feature's tags"""
     feature = Feature.from_string(FEATURE18)
 
     assert feature.scenarios[0].tags == ("runme1", "feature_runme")
@@ -692,8 +667,7 @@ def test_single_feature_single_tag():
 
 
 def test_single_scenario_many_scenarios():
-    "Untagged scenario following a tagged one should have no tags"
-
+    """Untagged scenario following a tagged one should have no tags"""
     feature = Feature.from_string(FEATURE13)
 
     first_scenario = feature.scenarios[0]
@@ -710,11 +684,11 @@ def test_single_scenario_many_scenarios():
 
 
 def test_scenarios_with_extra_whitespace():
-    "Make sure that extra leading whitespace is ignored"
+    """Make sure that extra leading whitespace is ignored"""
     feature = Feature.from_string(FEATURE14)
 
     assert type(feature.scenarios) == tuple
-    assert len(feature.scenarios), 1 == "It should have 1 scenario"
+    assert len(feature.scenarios) == 1, "It should have 1 scenario"
     assert feature.name == "Extra whitespace feature"
 
     scenario = feature.scenarios[0]
@@ -723,7 +697,7 @@ def test_scenarios_with_extra_whitespace():
 
 
 def test_scenarios_parsing():
-    "Tags are parsed correctly"
+    """Tags are parsed correctly"""
     feature = Feature.from_string(FEATURE15)
     scenarios_and_tags = [(s.name, s.tags) for s in feature.scenarios]
 
@@ -749,7 +723,7 @@ def test_scenarios_parsing():
 
 
 def test_scenarios_with_special_characters():
-    "Make sure that regex special characters in the scenario names are ignored"
+    """Make sure that regex special characters in the scenario names are ignored"""
     feature = Feature.from_string(FEATURE19)
 
     assert feature.scenarios[0].tags == ("runme1",)
@@ -818,7 +792,7 @@ def test_background_parsing_without_mmf():
 
 
 def test_syntax_error_for_scenarios_with_no_name():
-    ("Trying to parse features with unnamed " "scenarios will cause a syntax error")
+    """Trying to parse features with unnamed scenarios will cause a syntax error"""
     with pytest.raises(AloeSyntaxError) as error:
         Feature.from_string(FEATURE20)
 
@@ -849,7 +823,7 @@ PARSE ERROR
 
 
 def test_syntax_error_malformed_feature_from_file():
-    """Parsing a malformed feature in a filecauses a syntax error."""
+    """Parsing a malformed feature in a file causes a syntax error."""
 
     with named_temporary_file() as feature_file:
         feature_file.write(
@@ -874,11 +848,10 @@ PARSE ERROR
 
 
 def test_scenario_post_email():
-    (
-        "Having a scenario which the body has an email address; "
-        "Then the following scenario should have no "
-        "tags related to the email"
-    )
+    """
+    Having a scenario which the body has an email address;
+    Then the following scenario should have no tags related to the email
+    """
 
     feature = Feature.from_string(FEATURE21)
     scenario1, scenario2 = feature.scenarios
@@ -888,20 +861,14 @@ def test_scenario_post_email():
 
 
 def test_feature_first_scenario_tag_extraction():
-    (
-        "A feature object should be able to find the single tag "
-        "belonging to the first scenario"
-    )
+    """A feature object should be able to find the single tag belonging to the first scenario"""
     feature = Feature.from_string(FEATURE22)
 
     assert feature.scenarios[0].tags == ("onetag",)
 
 
 def test_feature_first_scenario_tags_extraction():
-    (
-        "A feature object should be able to find the tags "
-        "belonging to the first scenario"
-    )
+    """A feature object should be able to find the tags belonging to the first scenario"""
     feature = Feature.from_string(FEATURE23)
 
     assert feature.scenarios[0].tags == ("onetag", "another", "$%^&even-weird_chars")

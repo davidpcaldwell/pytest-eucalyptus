@@ -2,15 +2,6 @@
 """
 Test Russian language parsing.
 """
-
-from __future__ import unicode_literals
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# pylint:disable=redefined-builtin,wildcard-import,unused-wildcard-import
-from builtins import *
-
 from aloe.parser import Feature
 
 SCENARIO = """

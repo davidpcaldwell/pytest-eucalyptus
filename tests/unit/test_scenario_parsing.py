@@ -2,23 +2,7 @@
 """
 Test parsing scenarios.
 """
-
-from __future__ import unicode_literals
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-
-# pylint:disable=redefined-builtin
-from builtins import zip
-
-# pylint:enable=redefined-builtin
-
-from unittest import skip
-
-import pytest
-
 from aloe.parser import Step, Scenario, Feature
-from aloe.exceptions import AloeSyntaxError
 
 
 SCENARIO1 = """
@@ -230,9 +214,7 @@ def solved_steps(scenario):
 
 
 def test_scenario_has_name():
-    """
-    It should extract the name of the scenario
-    """
+    """It should extract the name of the scenario"""
 
     scenario = parse_scenario(SCENARIO1)
 
@@ -242,9 +224,7 @@ def test_scenario_has_name():
 
 
 def test_scenario_has_repr():
-    """
-    Scenario implements __repr__ nicely
-    """
+    """Scenario implements __repr__ nicely"""
 
     scenario = parse_scenario(SCENARIO1)
     assert (
@@ -253,14 +233,12 @@ def test_scenario_has_repr():
 
 
 def test_scenario_has_steps():
-    """
-    A scenario object should have a list of steps
-    """
+    """A scenario object should have a list of steps"""
 
     scenario = parse_scenario(SCENARIO1)
 
     assert type(scenario.steps) == tuple
-    assert len(scenario.steps), 4 == "It should have 4 steps"
+    assert len(scenario.steps) == 4, "It should have 4 steps"
 
     expected_sentences = [
         "Given I have the following courses in my university:",
@@ -281,9 +259,7 @@ def test_scenario_has_steps():
 
 
 def test_scenario_may_own_outlines():
-    """
-    A scenario may own outlines
-    """
+    """A scenario may own outlines"""
 
     scenario = parse_scenario(OUTLINED_SCENARIO)
 
@@ -308,9 +284,7 @@ def test_scenario_may_own_outlines():
 
 
 def test_steps_parsed_by_scenarios_has_scenarios():
-    """
-    Steps parsed by scenarios has scenarios
-    """
+    """Steps parsed by scenarios has scenarios"""
 
     scenario = parse_scenario(SCENARIO1)
     for step in scenario.steps:
@@ -318,9 +292,7 @@ def test_steps_parsed_by_scenarios_has_scenarios():
 
 
 def test_scenario_sentences_can_be_solved():
-    """
-    A scenario with outlines may solve its sentences
-    """
+    """A scenario with outlines may solve its sentences"""
     scenario = parse_scenario(OUTLINED_SCENARIO)
     solved = solved_steps(scenario)
 
@@ -346,9 +318,7 @@ def test_scenario_sentences_can_be_solved():
 
 
 def test_scenario_tables_are_solved_against_outlines():
-    """
-    Outline substitution should apply to tables within a scenario
-    """
+    """Outline substitution should apply to tables within a scenario"""
 
     expected_hashes_per_step = [
         # a = 1, b = 2
@@ -372,9 +342,7 @@ def test_scenario_tables_are_solved_against_outlines():
 
 
 def test_scenario_multilines_are_solved_against_outlines():
-    """
-    Outline substitution should apply to multiline strings within a scenario
-    """
+    """Outline substitution should apply to multiline strings within a scenario"""
 
     expected_multiline = "<div>outline value</div>"
 
@@ -386,9 +354,7 @@ def test_scenario_multilines_are_solved_against_outlines():
 
 
 def test_solved_steps_also_have_scenario_as_attribute():
-    """
-    Steps solved in scenario outlines also have scenario as attribute
-    """
+    """Steps solved in scenario outlines also have scenario as attribute"""
 
     scenario = parse_scenario(OUTLINED_SCENARIO)
     for step in solved_steps(scenario):
@@ -396,9 +362,7 @@ def test_solved_steps_also_have_scenario_as_attribute():
 
 
 def test_scenario_outlines_within_feature():
-    """
-    Solving scenario outlines within a feature
-    """
+    """Solving scenario outlines within a feature"""
 
     feature = Feature.from_string(OUTLINED_FEATURE)
     scenario = feature.scenarios[0]
@@ -426,9 +390,7 @@ def test_scenario_outlines_within_feature():
 
 
 def test_full_featured_feature():
-    """
-    Solving scenarios within a full-featured feature
-    """
+    """Solving scenarios within a full-featured feature"""
 
     feature = Feature.from_string(OUTLINED_FEATURE_WITH_MANY)
     scenario1, scenario2, scenario3, scenario4 = feature.scenarios
@@ -493,16 +455,8 @@ def test_full_featured_feature():
         assert [x.sentence for x in got_steps] == expected_steps
 
 
-@skip("FIXME: Gherkin parser allows this")
-def test_scenario_with_table_and_no_step_fails():
-    "A step table imediately after the scenario line, without step line fails"
-
-    with pytest.rises(AloeSyntaxError):
-        parse_scenario(SCENARIO_FAILED)
-
-
 def test_scenario_ignore_commented_lines_from_examples():
-    "Comments on scenario example should be ignored"
+    """Comments on scenario example should be ignored"""
     scenario = parse_scenario(OUTLINED_SCENARIO_WITH_COMMENTS_ON_EXAMPLES)
 
     assert scenario.outlines == (
@@ -512,7 +466,7 @@ def test_scenario_ignore_commented_lines_from_examples():
 
 
 def test_scenario_aggregate_all_examples_blocks():
-    "All scenario's examples block should be translated to outlines"
+    """All scenario's examples block should be translated to outlines"""
     scenario = parse_scenario(OUTLINED_SCENARIO_WITH_MORE_THAN_ONE_EXAMPLES_BLOCK)
 
     assert scenario.outlines == (
@@ -525,17 +479,14 @@ def test_scenario_aggregate_all_examples_blocks():
 
 
 def test_commented_scenarios():
-    "A scenario string that contains lines starting with '#' will be commented"
+    """A scenario string that contains lines starting with '#' will be commented"""
     scenario = parse_scenario(COMMENTED_SCENARIO)
     assert scenario.name == "Adding some students to my university database"
     assert len(scenario.steps) == 4
 
 
 def test_scenario_with_hash_within_double_quotes():
-    (
-        "Scenarios have hashes within double quotes and yet don't "
-        "consider them as comments"
-    )
+    """Scenarios have hashes within double quotes and yet don't consider them as comments"""
 
     scenario = parse_scenario(INLINE_COMMENTS_IGNORED_WITHIN_DOUBLE_QUOTES)
 
@@ -546,10 +497,7 @@ def test_scenario_with_hash_within_double_quotes():
 
 
 def test_scenario_with_hash_within_single_quotes():
-    (
-        "Scenarios have hashes within single quotes and yet don't "
-        "consider them as comments"
-    )
+    """Scenarios have hashes within single quotes and yet don't consider them as comments"""
 
     scenario = parse_scenario(INLINE_COMMENTS_IGNORED_WITHIN_SINGLE_QUOTES)
 
