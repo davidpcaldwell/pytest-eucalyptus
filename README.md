@@ -1,5 +1,6 @@
 # Eucalyptus - BDD plugin for Pytest
-> A nice fork of [Aloe](https://github.com/aloetesting/aloe). 
+
+> A nice fork of [Aloe](https://github.com/aloetesting/aloe).
 Migrated from Nose to Pytest.
 
 [![pypi][pypi]][pypi-url]
@@ -9,8 +10,8 @@ Migrated from Nose to Pytest.
 [![coverage][cover]][cover-url]
 [![Quality Gate Status][sonar]](sonar-url)
 
+**pytest-eucalyptus** has been built to feature the best of both worlds:
 
-**pytest-eucalyptus** has been built to feature the best of both worlds: 
 - [Aloe](https://github.com/aloetesting/aloe) which implements great infrastructure and uses the original Gherkin parser.
 - [pytest-bdd](https://github.com/pytest-dev/pytest-bdd) does not require a separate runner and benefits from the power and flexibility of Pytest.
 
@@ -80,10 +81,8 @@ Migrated from Nose to Pytest.
 6. Run the code
 
 ```sh
-    $ pytest
-```
+$ pytest
 
-```
 ============================= test session starts ==============================
 platform darwin -- Python 3.7.3, pytest-4.6.3, py-1.8.0, pluggy-0.12.0
 rootdir: /Users/eucalyptus-user/src/test
@@ -116,7 +115,6 @@ Pytest-Eucalyptus is licensed under the Apache License 2.0 – see the [LICENSE.
 
 [docs]: https://readthedocs.org/projects/eucalyptus/badge/?version=latest
 [docs-url]: https://eucalyptus.readthedocs.io/?badge=latest
-
 
 [sonar]: https://sonarcloud.io/api/project_badges/measure?project=wayfair_pytest-eucalyptus&metric=alert_status
 [sonar-url]: https://sonarcloud.io/dashboard?id=wayfair_pytest-eucalyptus
