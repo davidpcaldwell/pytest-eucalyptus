@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+from pathlib import Path
 
 import pytest
 from aloe.testclass import TestCase
@@ -41,7 +42,7 @@ def pytest_collect_file(path, parent):
     """
     if path.ext == ".feature":
         if hasattr(Feature, "from_parent"):
-            return Feature.from_parent(parent, fspath=path)
+            return Feature.from_parent(parent, path=Path(str(path)))
         else:
             return Feature(path, parent=parent)
 
